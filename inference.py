@@ -42,7 +42,7 @@ def main(input_saved_model_dir_path, input_classes_path, input_data_dir_path, ou
         output['answer'] = json_dict
         output['video_path'] = video_path
         output['skip_frame'] = skip_frame
-        output['cam'] = {'array': output['cam'].flatten().tolist(), 'shape': output['cam'].shape}
+        output['cam'] = {'array': [round(elem, 5) for elem in output['cam'].flatten().tolist()], 'shape': output['cam'].shape}
         with open(output_json_path, 'w') as f:
             json.dump(output, f, ensure_ascii=False, indent=4, sort_keys=True, separators=(',', ': '))
 
