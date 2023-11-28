@@ -1,0 +1,4 @@
+tqdm>=4.64.1
+vaik-video-count-pb-inference @ git+https://github.com/vaik-info/vaik-video-count-pb-inference.git
+imageio>=2.31.1
+imageio-ffmpeg>=0.4.8
