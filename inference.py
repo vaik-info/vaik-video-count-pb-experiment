@@ -40,7 +40,8 @@ def main(input_saved_model_dir_path, input_classes_path, input_data_dir_path, ou
         output_json_path = os.path.join(output_dir_path, os.path.splitext(os.path.basename(video_path))[0] + '.json')
         output['label'] = classes
         output['answer'] = json_dict
-        output['image_path'] = video_path
+        output['video_path'] = video_path
+        output['skip_frame'] = skip_frame
         output['cam'] = {'array': output['cam'].flatten().tolist(), 'shape': output['cam'].shape}
         with open(output_json_path, 'w') as f:
             json.dump(output, f, ensure_ascii=False, indent=4, sort_keys=True, separators=(',', ': '))
