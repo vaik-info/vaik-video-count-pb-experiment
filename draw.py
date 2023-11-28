@@ -16,11 +16,8 @@ def get_classes_color(classes):
     return colors
 
 def create_gif(image_list, output_file_path, duration=5):
-    gif_image_list = []
-    for image in image_list:
-        gif_image_list.append(image)
-    gif_image_list[0].save(output_file_path,
-                           save_all=True, append_images=gif_image_list[1:], optimize=False, duration=duration, loop=0)
+    image_list[0].save(output_file_path,
+                           save_all=True, append_images=image_list[1:], optimize=False, duration=duration, loop=0)
 
 
 def get_image(json_dict_elem, colors):
