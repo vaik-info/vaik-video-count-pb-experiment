@@ -42,7 +42,7 @@ def main(input_json_dir_path, input_classes_path, output_dir_path):
             os.path.join(output_dir_path, f'{classes.index(class_label):04d}_{class_label}.png'), quality=100,
             subsampling=0)
 
-    json_path_list = glob.glob(os.path.join(input_json_dir_path, '*.json'))
+    json_path_list = glob.glob(os.path.join(input_json_dir_path, '*02.json'))
     json_dict_list = []
     for json_path in json_path_list:
         with open(json_path, 'r') as f:
@@ -57,7 +57,8 @@ def main(input_json_dir_path, input_classes_path, output_dir_path):
             canvas_image = Image.fromarray(frame).convert('RGBA')
             for target_class_index, target_class_label in enumerate(classes):
                 target_pred_image = pred_frames[frame_index, :, :, target_class_index]
-                target_pred_max_value = np.max(target_pred_image)
+                Image.fromarray(np.clip(target_pred_image/np.max(target_pred_image) * 255., 0., 255.).astype(np.uint8)).save('log.png')
+                target_pred_max_value = np.max(pred_frames[:, :, :, target_class_index])
                 target_pred_image = target_pred_image / target_pred_max_value if target_pred_max_value != 0. else target_pred_image
                 target_pred_image = np.clip(target_pred_image*255, 0, 255).astype(np.uint8)
                 draw_image = np.zeros((target_pred_image.shape[0], target_pred_image.shape[1], 4), dtype=np.uint8)
