@@ -1,1 +1,1 @@
-{"one": 3, "zero": 3}
+{"zero": 1, "one": 1, "detail": [{"label": "zero", "count": [false, false, false, false, false, false, true, true, true, true, true, false, false, false, false, false, false, false, false, false]}, {"label": "one", "count": [false, false, false, false, false, false, false, false, true, true, true, true, true, true, true, true, true, true, true, false]}]}
