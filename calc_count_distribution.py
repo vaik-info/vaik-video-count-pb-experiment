@@ -57,13 +57,14 @@ def calc_count_distribution_mse(json_dict_list, classes, skip_frame):
                     for count_index, count in enumerate(count_list):
                         target_count_list[count_index] += count
             target_count_list = target_count_list[::skip_frame]
-            pred_count_list = np.sum(pred_count[::skip_frame, :, :, classes.index(target_class_label)], axis=-1)
+            target_pred_count = pred_count[::skip_frame, :, :, classes.index(target_class_label)]
+            pred_count_list = np.sum(target_pred_count, axis=-1)
             pred_count_list = np.sum(pred_count_list, axis=-1).tolist()
             mse = mean_squared_error(target_count_list, pred_count_list)
             distribution_dict[target_class_label].append(mse)
             print(f'video_path: {json_dict["video_path"]},  mse: {mse:.4f}')
     mean_acc_list = [np.mean(distribution_dict[label]) for label in classes]
-    print(f'CountACCRatio[all]:{np.mean(mean_acc_list):.4f}')
+    print(f'CountDistributionMSE[all]:{np.mean(mean_acc_list):.4f}')
     for index, label in enumerate(classes):
         print(f'{label}: {mean_acc_list[index]:.4f}')
     print()
