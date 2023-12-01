@@ -47,6 +47,7 @@ def calc_count_distribution_mse(json_dict_list, classes, skip_frame):
     for json_dict in json_dict_list:
         answer_count_list = json_dict['answer']['detail']
         pred_count = np.asarray(json_dict['cam']['array']).reshape(json_dict['cam']['shape'])
+        print(f'video_path: {os.path.basename(json_dict["video_path"])}, ', end='')
         for target_class_label in classes:
             target_count_list = [0, ] * len(answer_count_list[0]['count'])
             for answer_count in answer_count_list:
@@ -62,7 +63,8 @@ def calc_count_distribution_mse(json_dict_list, classes, skip_frame):
             pred_count_list = np.sum(pred_count_list, axis=-1).tolist()
             mse = mean_squared_error(target_count_list, pred_count_list)
             distribution_dict[target_class_label].append(mse)
-            print(f'video_path: {json_dict["video_path"]},  mse: {mse:.4f}')
+            print(f'{target_class_label}: {json_dict["answer"][target_class_label] if target_class_label in json_dict["answer"].keys() else 0 }[count(answer)]-{sum(pred_count_list):.2f}[count(pred)]-{mse:.4f}[mse], ', end='')
+        print()
     mean_acc_list = [np.mean(distribution_dict[label]) for label in classes]
     print(f'CountDistributionMSE[all]:{np.mean(mean_acc_list):.4f}')
     for index, label in enumerate(classes):
