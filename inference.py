@@ -53,7 +53,7 @@ def main(input_saved_model_dir_path, input_classes_path, input_data_dir_path, ou
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='inference')
     parser.add_argument('--input_saved_model_dir_path', type=str,
-                        default='/home/kentaro/.vaik-video-count-pb-trainer/output_model/2023-12-01-23-48-03-main/step-1000_batch-4_epoch-19_loss_0.1037_val_loss_0.1284')
+                        default='/home/kentaro/.vaik-video-count-pb-trainer/output_model/2023-12-02-03-51-31/step-1000_batch-4_epoch-19_loss_0.0912_active_huber_loss_0.0912_blank_huber_loss_0.0001_val_loss_0.1162_val_active_huber_loss_0.1161_val_blank_huber_loss_0.0001')
     parser.add_argument('--input_classes_path', type=str,
                         default=os.path.join(os.path.dirname(__file__), 'test_dataset/classes.txt'))
     parser.add_argument('--input_data_dir_path', type=str,

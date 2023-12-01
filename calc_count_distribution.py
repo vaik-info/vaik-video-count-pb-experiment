@@ -62,6 +62,7 @@ def calc_count_distribution_mse(json_dict_list, classes, skip_frame):
                         target_count_list[count_index] += count
             target_count_list = target_count_list[::skip_frame]
             target_pred_count = pred_count[::skip_frame, :, :, classes.index(target_class_label)]
+            print(target_class_label, np.max(target_pred_count))
             pred_count_list = np.sum(target_pred_count, axis=-1)
             pred_count_list = np.sum(pred_count_list, axis=-1).tolist()
             mse = mean_squared_error(target_count_list, pred_count_list)
