@@ -47,7 +47,10 @@ def calc_count_distribution_mse(json_dict_list, classes, skip_frame):
     for json_dict in json_dict_list:
         answer_count_list = json_dict['answer']['detail']
         pred_count = np.asarray(json_dict['cam']['array']).reshape(json_dict['cam']['shape'])
-        print(f'video_path: {os.path.basename(json_dict["video_path"])}, ', end='')
+        print(f'video_path: {os.path.basename(json_dict["video_path"])}')
+        mse_log_string = ""
+        answer_count_list_string = "Answer:\t"
+        pred_count_list_string = "Pred:\t"
         for target_class_label in classes:
             target_count_list = [0, ] * len(answer_count_list[0]['count'])
             for answer_count in answer_count_list:
@@ -63,7 +66,13 @@ def calc_count_distribution_mse(json_dict_list, classes, skip_frame):
             pred_count_list = np.sum(pred_count_list, axis=-1).tolist()
             mse = mean_squared_error(target_count_list, pred_count_list)
             distribution_dict[target_class_label].append(mse)
-            print(f'{target_class_label}: {json_dict["answer"][target_class_label] if target_class_label in json_dict["answer"].keys() else 0 }[count(answer)]-{sum(pred_count_list):.2f}[count(pred)]-{mse:.4f}[mse], ', end='')
+            mse_log_string += f'{target_class_label}: {json_dict["answer"][target_class_label] if target_class_label in json_dict["answer"].keys() else 0 }[count(answer)]-{sum(pred_count_list):.2f}[count(pred)]-{mse:.4f}[mse], '
+            answer_count_list_string += f'{target_class_label}: {[f"{elem:.2f}" for elem in target_count_list]}, '
+            pred_count_list_string += f'{target_class_label}: {[f"{elem:.2f}" for elem in pred_count_list]}, '
+
+        print(mse_log_string)
+        print(answer_count_list_string)
+        print(pred_count_list_string)
         print()
     mean_acc_list = [np.mean(distribution_dict[label]) for label in classes]
     print(f'CountDistributionMSE[all]:{np.mean(mean_acc_list):.4f}')
@@ -76,7 +85,7 @@ def main(input_json_dir_path, input_classes_path, skip_frame):
         classes = f.readlines()
     classes = tuple([label.strip() for label in classes])
 
-    json_path_list = glob.glob(os.path.join(input_json_dir_path, '*.json'))
+    json_path_list = sorted(glob.glob(os.path.join(input_json_dir_path, '*.json')))
     json_dict_list = []
     for json_path in json_path_list:
         with open(json_path, 'r') as f:
