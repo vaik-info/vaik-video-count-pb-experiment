@@ -42,7 +42,7 @@ def main(input_json_dir_path, input_classes_path, output_dir_path):
             os.path.join(output_dir_path, f'{classes.index(class_label):04d}_{class_label}.png'), quality=100,
             subsampling=0)
 
-    json_path_list = glob.glob(os.path.join(input_json_dir_path, '*02.json'))
+    json_path_list = glob.glob(os.path.join(input_json_dir_path, '*.json'))
     json_dict_list = []
     for json_path in json_path_list:
         with open(json_path, 'r') as f:
