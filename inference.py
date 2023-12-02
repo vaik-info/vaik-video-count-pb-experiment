@@ -8,13 +8,13 @@ import numpy as np
 from vaik_video_count_pb_inference.pb_model import PbModel
 
 
-def main(input_saved_model_dir_path, input_classes_path, input_data_dir_path, output_dir_path, skip_frame):
+def main(input_saved_model_file_path, input_classes_path, input_data_dir_path, output_dir_path, skip_frame):
     os.makedirs(output_dir_path, exist_ok=True)
     with open(input_classes_path, 'r') as f:
         classes = f.readlines()
     classes = tuple([label.strip() for label in classes])
 
-    model = PbModel(input_saved_model_dir_path, classes)
+    model = PbModel(input_saved_model_file_path, classes)
 
     types = ('*.avi', '*.mp4')
     video_path_list = []
@@ -43,6 +43,11 @@ def main(input_saved_model_dir_path, input_classes_path, input_data_dir_path, ou
         output['video_path'] = video_path
         output['skip_frame'] = skip_frame
         output['cam'] = {'array': [round(elem, 5) for elem in output['cam'].flatten().tolist()], 'shape': output['cam'].shape}
+        grad_cam_list = []
+        for grad_cam in output['grad_cam']:
+            grad_cam_list.append({'array': grad_cam.flatten().tolist(), 'shape': grad_cam.shape})
+
+        output['grad_cam'] = grad_cam_list
         with open(output_json_path, 'w') as f:
             json.dump(output, f, ensure_ascii=False, indent=4, sort_keys=True, separators=(',', ': '))
 
@@ -52,8 +57,8 @@ def main(input_saved_model_dir_path, input_classes_path, input_data_dir_path, ou
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='inference')
-    parser.add_argument('--input_saved_model_dir_path', type=str,
-                        default='/home/kentaro/.vaik-video-count-pb-trainer/output_model/2023-12-02-03-51-31/step-1000_batch-4_epoch-19_loss_0.0912_active_huber_loss_0.0912_blank_huber_loss_0.0001_val_loss_0.1162_val_active_huber_loss_0.1161_val_blank_huber_loss_0.0001')
+    parser.add_argument('--input_saved_model_file_path', type=str,
+                        default='/home/kentaro/.vaik-video-count-pb-trainer/output_model/2023-12-03-02-32-51/step-10_batch-4_epoch-0_loss_4.2300_val_loss_1.2275.h5')
     parser.add_argument('--input_classes_path', type=str,
                         default=os.path.join(os.path.dirname(__file__), 'test_dataset/classes.txt'))
     parser.add_argument('--input_data_dir_path', type=str,
@@ -62,7 +67,7 @@ if __name__ == '__main__':
     parser.add_argument('--skip_frame', type=int, default=1)
     args = parser.parse_args()
 
-    args.input_saved_model_dir_path = os.path.expanduser(args.input_saved_model_dir_path)
+    args.input_saved_model_file_path = os.path.expanduser(args.input_saved_model_file_path)
     args.input_classes_path = os.path.expanduser(args.input_classes_path)
     args.input_data_dir_path = os.path.expanduser(args.input_data_dir_path)
     args.output_dir_path = os.path.expanduser(args.output_dir_path)
