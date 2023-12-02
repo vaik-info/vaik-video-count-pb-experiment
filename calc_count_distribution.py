@@ -105,7 +105,7 @@ def main(input_json_dir_path, input_classes_path, skip_frame):
         classes = f.readlines()
     classes = tuple([label.strip() for label in classes])
 
-    json_path_list = sorted(glob.glob(os.path.join(input_json_dir_path, '*.json')))[:2]
+    json_path_list = sorted(glob.glob(os.path.join(input_json_dir_path, '*.json')))
     json_dict_list = []
     for json_path in tqdm(json_path_list):
         with open(json_path, 'r') as f:
