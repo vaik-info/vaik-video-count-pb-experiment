@@ -100,6 +100,9 @@ def calc_count_distribution_mse(json_dict_list, classes, skip_frame):
             grad_mse_pred = np.mean([grad_mse_pred[pred_index] for grad_mse_pred in grad_mse])
             print(f'{grad_mse_pred:.2f}[grad{grad_index:02d}], ', end='')
         print()
+    print(f'MSE, {np.mean(cam_mse_list):.2f}[cam], ', end='')
+    for grad_index, grad_mse in enumerate(grad_mse_list):
+        print(f'{np.mean(grad_mse):.2f}[grad{grad_index:02d}], ', end='')
 def main(input_json_dir_path, input_classes_path, skip_frame):
     with open(input_classes_path, 'r') as f:
         classes = f.readlines()
