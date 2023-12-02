@@ -59,7 +59,7 @@ def main(input_json_dir_path, input_classes_path, output_dir_path):
         canvas = np.zeros((16, 16, 3), dtype=np.uint8)
         canvas[:, :, :] = np.asarray(color)
         Image.fromarray(canvas).save(
-            os.path.join(output_dir_path, f'{classes.index(class_label):04d}_{class_label}.png'), quality=100,
+            os.path.join(output_dir_path, f'z-{classes.index(class_label):04d}_{class_label}.png'), quality=100,
             subsampling=0)
 
     json_path_list = glob.glob(os.path.join(input_json_dir_path, '*.json'))
