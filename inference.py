@@ -4,6 +4,7 @@ import glob
 import json
 import imageio
 import time
+from tqdm import tqdm
 import numpy as np
 from vaik_video_count_pb_inference.pb_model import PbModel
 
@@ -24,7 +25,7 @@ def main(input_saved_model_file_path, input_classes_path, input_data_dir_path, o
     total_inference_time = 0
     total_frames_num = 0
 
-    for video_path in video_path_list:
+    for video_path in tqdm(video_path_list):
         video = imageio.get_reader(video_path,  'ffmpeg')
         frames = [frame for frame in video][::skip_frame]
         frames = np.stack(frames, axis=0)
