@@ -2,6 +2,7 @@ import argparse
 import os
 import glob
 import json
+from tqdm import tqdm
 import numpy as np
 
 
@@ -78,9 +79,10 @@ def main(input_json_dir_path, input_classes_path):
 
     json_path_list = glob.glob(os.path.join(input_json_dir_path, '*.json'))
     json_dict_list = []
-    for json_path in json_path_list:
+    for json_path in tqdm(json_path_list):
         with open(json_path, 'r') as f:
             json_dict = json.load(f)
+            del json_dict['grad_cam']
             json_dict_list.append(json_dict)
     calc_count_ACC(json_dict_list, classes)
 
