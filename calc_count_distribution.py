@@ -56,14 +56,13 @@ def dump(json_dict, classes, answer_count_list, pred_count, skip_frame, distribu
                     target_count_list[count_index] += count
         target_count_list = target_count_list[::skip_frame]
         target_pred_count = pred_count[::skip_frame, :, :, classes.index(target_class_label)]
-        print(target_class_label, np.max(target_pred_count))
         pred_count_list = np.sum(target_pred_count, axis=-1)
         pred_count_list = np.sum(pred_count_list, axis=-1).tolist()
         mse = mean_squared_error(target_count_list, pred_count_list)
         distribution_dict[target_class_label].append(mse)
-        mse_log_string += f'{target_class_label}: {json_dict["answer"][target_class_label] if target_class_label in json_dict["answer"].keys() else 0 }[count(answer)]-{sum(pred_count_list):.2f}[count(pred)]-{mse:.4f}[mse], '
-        answer_count_list_string += f'{target_class_label}: {[f"{elem:.2f}" for elem in target_count_list]}, '
-        pred_count_list_string += f'{target_class_label}: {[f"{elem:.2f}" for elem in pred_count_list]}, '
+        mse_log_string += f'{target_class_label}: {json_dict["answer"][target_class_label] if target_class_label in json_dict["answer"].keys() else 0 }[count(answer)]-{sum(pred_count_list):.4f}[count(pred)]-{mse:.4f}[mse], '
+        answer_count_list_string += f'{target_class_label}: {[f"{elem:.4f}" for elem in target_count_list]}, '
+        pred_count_list_string += f'{target_class_label}: {[f"{elem:.4f}" for elem in pred_count_list]}, '
 
     print(mse_log_string)
     print(answer_count_list_string)
@@ -95,14 +94,14 @@ def calc_count_distribution_mse(json_dict_list, classes, skip_frame):
             grad_mse_list[grad_index].append(grad_mse)
     for pred_index in range(len(cam_mse_list[0])):
         cam_mse_pred = np.mean([cam_mse[pred_index] for cam_mse in cam_mse_list])
-        print(f'{classes[pred_index]}, {cam_mse_pred:.2f}[cam], ', end='')
+        print(f'{classes[pred_index]}, {cam_mse_pred:.4f}[cam], ', end='')
         for grad_index, grad_mse in enumerate(grad_mse_list):
             grad_mse_pred = np.mean([grad_mse_pred[pred_index] for grad_mse_pred in grad_mse])
-            print(f'{grad_mse_pred:.2f}[grad{grad_index:02d}], ', end='')
+            print(f'{grad_mse_pred:.4f}[grad{grad_index:02d}], ', end='')
         print()
-    print(f'MSE, {np.mean(cam_mse_list):.2f}[cam], ', end='')
+    print(f'MSE, {np.mean(cam_mse_list):.4f}[cam], ', end='')
     for grad_index, grad_mse in enumerate(grad_mse_list):
-        print(f'{np.mean(grad_mse):.2f}[grad{grad_index:02d}], ', end='')
+        print(f'{np.mean(grad_mse):.4f}[grad{grad_index:02d}], ', end='')
 def main(input_json_dir_path, input_classes_path, skip_frame):
     with open(input_classes_path, 'r') as f:
         classes = f.readlines()
