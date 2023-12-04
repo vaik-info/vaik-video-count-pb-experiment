@@ -40,13 +40,6 @@ def save_gif(pred_frames, frames, classes, colors, json_dict, output_dir_path, p
     count_str = count_str[:-1]
     output_gif_path = os.path.join(output_dir_path, f'{os.path.splitext(os.path.basename(json_dict["video_path"]))[0]}-pred(ans)-{count_str}_{prefix}.gif')
     create_gif(canvas_image_list, output_gif_path)
-def get_image(json_dict_elem, colors):
-    vis_image = np.zeros(json_dict_elem['shape'] + [3, ], dtype=np.uint8)
-    org_image = np.reshape(np.asarray(json_dict_elem['array']), vis_image.shape[:-1])
-    for class_index in range(len(colors)):
-        array_index = org_image == class_index
-        vis_image[array_index] = colors[class_index]
-    return Image.fromarray(vis_image)
 
 def main(input_json_dir_path, input_classes_path, output_dir_path):
     os.makedirs(output_dir_path, exist_ok=True)
@@ -73,8 +66,6 @@ def main(input_json_dir_path, input_classes_path, output_dir_path):
         frames = [frame for frame in video][::json_dict['skip_frame']]
         pred_frames = np.asarray(json_dict['cam']['array']).reshape(json_dict['cam']['shape'])
         save_gif(pred_frames, frames, classes, colors, json_dict, output_dir_path, 'cam')
-
-        frames = [np.zeros(frame.shape, dtype=np.uint8) for frame in video][::json_dict['skip_frame']]
 
         for grad_index, grad_cam in enumerate(json_dict['grad_cam']):
             pred_frames = np.asarray(grad_cam['array']).reshape(grad_cam['shape'])
